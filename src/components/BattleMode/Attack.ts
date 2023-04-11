@@ -1,0 +1,31 @@
+import { Attribute, Entity } from './index';
+
+export class Attack {
+  public baseDamage: number;
+  public attackSpeed: number;
+  public attackType: AttackType;
+  public nextAttack: number;
+  constructor(attackType: AttackType, value: number, attackSpeed: number) {
+    this.attackType = attackType;
+    this.baseDamage = value;
+    this.attackSpeed = attackSpeed;
+    this.nextAttack = attackSpeed;
+  }
+  attack(target: Entity, time: number, parent: Entity) {
+    let finalDamage = this.baseDamage;
+    parent.attributes.forEach((element: Attribute) => {
+      if (element.name.toLowerCase().includes('damage')) {
+        finalDamage += element.value;
+      }
+    });
+    target.takeDamage(finalDamage);
+    this.nextAttack = time + this.attackSpeed;
+  }
+}
+
+export enum AttackType {
+  Random,
+  BiggertHP,
+  EnemyPlayer,
+  None,
+}

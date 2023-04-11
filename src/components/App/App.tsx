@@ -1,5 +1,17 @@
+import { useState } from 'react';
 import styles from './styles.module.css';
+import { BattleMode, StartMenu } from 'components/';
+//const gameManager: GameManager = new GameManager(10);
 
 export const App = () => {
-  return <div className={styles.main}>App</div>;
+  const [mode, setMode] = useState('battle');
+  return (
+    <div className={styles.main}>
+      {mode === 'start' && (
+        <StartMenu onStartClick={() => setMode('battle')} />
+      )}
+      {mode === 'battle' && <BattleMode />}
+      {mode === 'gameOver' && <>GameOver</>}
+    </div>
+  );
 };
