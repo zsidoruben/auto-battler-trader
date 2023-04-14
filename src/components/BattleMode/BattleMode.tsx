@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import styles from './styles.module.css';
+import React from 'react';
+
 import {
   findGcd,
   Ability,
@@ -10,6 +12,7 @@ import {
   Entity,
   Player,
 } from './index';
+import { Card } from '../Card/Card';
 
 //import { fireDamage } from './Abilities';
 
@@ -28,15 +31,12 @@ export const BattleMode = () => {
       );
     },
   );
-
-  const playerAttack: Attack = new Attack(AttackType.Random, 10, 10);
-  const enemyAttack: Attack = new Attack(AttackType.Random, 15, 45);
-  const player: Player = new Player('Rubenatya', 100, playerAttack);
-  const enemy: Player = new Player('Kocsog', 100, enemyAttack);
+  const player: Entity = new Entity('Rubenatya', 100, 10, 10);
+  const enemy: Entity = new Entity('Kocsog', 100, 10, 10);
   //player.addAbility(fireDamage);
-  const gdc = findGcd([playerAttack.attackSpeed, enemyAttack.attackSpeed]);
+  const gdc = findGcd([player.attackSpeed, enemy.attackSpeed]);
   console.log('GDC: ' + gdc);
-  player.addAttribute(new Attribute('Ice Damage', 0.5));
+  player.addAttribute(new Attribute('Ice Damage', 50));
   player.addAttribute(new Attribute('Earth Damage', 0.5));
   player.addAttribute(new Attribute('Blood Damage', 0.5));
   player.addAttribute(new Attribute('Rot Damage', 0.5));
@@ -46,19 +46,20 @@ export const BattleMode = () => {
   console.log('Attribute Count: ' + player.attributes.length);
   let time: number = 0;
   while (player.isDead === false && enemy.isDead === false) {
-    if (player.attack.nextAttack <= time) {
-      player.attack.attack(enemy, time, player);
+    if (player.nextAttack <= time) {
+      player.attack(enemy, time);
     }
-    if (enemy.attack.nextAttack <= time) {
-      enemy.attack.attack(player, time, enemy);
+    if (enemy.nextAttack <= time) {
+      enemy.attack(player, time);
     }
     time += gdc;
   }
 
   return (
     <div className={styles.main}>
+       <Card ability={player.abilities[0]}></Card>
       <div className={styles.time}>
-        <p>Rounds:</p>
+        <p>Time: {time}</p>
       </div>
       <div>
         <p>Enemy: {enemy.name}</p>
@@ -79,6 +80,7 @@ export const BattleMode = () => {
         ))}
       </div>
       <button>Simulate</button>
+      
     </div>
   );
 };

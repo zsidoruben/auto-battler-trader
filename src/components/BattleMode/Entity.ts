@@ -3,17 +3,32 @@ export class Entity {
   public name: string;
   public health: number;
   public maxHealth;
-  public attack: Attack;
+  public attackSpeed: number;
+  public nextAttack: number;
+  public damage: number;
 
   public abilities: Ability[] = [];
   public attributes: Attribute[] = [];
   public isDead: boolean = false;
-  constructor(name: string, health: number, attack: Attack) {
+  constructor(name: string, health: number, attackSpeed: number, damage: number) {
     this.name = name;
     this.health = health;
     this.maxHealth = health;
-    this.attack = attack;
+    this.attackSpeed = attackSpeed;
+    this.nextAttack = attackSpeed;
+    this.damage = damage;
   }
+  attack(target: Entity, time: number) {
+    let finalDamage = this.damage;
+    this.attributes.forEach((element: Attribute) => {
+      if (element.name.toLowerCase().includes('damage')) {
+        finalDamage += element.value;
+      }
+    });
+    target.takeDamage(finalDamage);
+    this.nextAttack = time + this.attackSpeed;
+  }
+
   addAbility(ability: Ability) {
     this.abilities.push(ability);
     ability.applied(this);
@@ -41,7 +56,7 @@ export class Entity {
 }
 
 export class Player extends Entity {
-  constructor(name: string, health: number, attack: Attack) {
-    super(name, health, attack);
+  constructor(name: string, health: number, attack: number) {
+    super(name, health, 10, 10);
   }
 }
