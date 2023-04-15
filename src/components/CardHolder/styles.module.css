@@ -1,0 +1,21 @@
+.App {
+    text-align: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.HeartDeck {
+    width: 300px;
+    height: 500px;
+    border: 3px solid white;
+}
+
+img {
+    margin: 5px;
+}
+
+.Avaible {
+    margin: 10px;
+}
+
+.main {}
