@@ -1,4 +1,5 @@
-import { Ability, Attack, AttackType, Attribute } from './index';
+import { Ability } from './Ability';
+import { Attribute } from './Attribute';
 export class Entity {
   public name: string;
   public health: number;
@@ -10,7 +11,12 @@ export class Entity {
   public abilities: Ability[] = [];
   public attributes: Attribute[] = [];
   public isDead: boolean = false;
-  constructor(name: string, health: number, attackSpeed: number, damage: number) {
+  constructor(
+    name: string,
+    health: number,
+    attackSpeed: number,
+    damage: number,
+  ) {
     this.name = name;
     this.health = health;
     this.maxHealth = health;
@@ -31,7 +37,9 @@ export class Entity {
 
   addAbility(ability: Ability) {
     this.abilities.push(ability);
-    ability.applied(this);
+    if (ability.applied) {
+      ability.applied(this);
+    }
   }
   takeDamage(damage: number) {
     console.log(this.name + ' takes ' + damage + ' damage');

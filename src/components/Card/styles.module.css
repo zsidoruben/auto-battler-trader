@@ -25,21 +25,17 @@
  }
 
  .energycost {
-     position: absolute;
-     top: 0;
-     left: 0;
-     width: 80px;
+     width: 40px;
  }
 
  .energytext {
-     position: absolute;
-     top: 7px;
-     left: 26px;
      font-weight: bold;
-     font-size: 50px;
-     -webkit-text-fill-color: white;
-     -webkit-text-stroke-width: 2px;
-     -webkit-text-stroke-color: darkcyan;
-     z-index: 10;
+     font-size: 24px;
+     -webkit-text-fill-color: darkcyan;
+ }
 
+ .energycontainer {
+     display: flex;
+     align-items: center;
+     grid-template-columns: 1fr 1fr;
  }

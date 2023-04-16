@@ -1,39 +1,39 @@
-import React from 'react';
+import { FC } from 'react';
 import styles from './styles.module.css';
-import { Ability } from '../BattleMode';
-import { Draggable } from 'react-beautiful-dnd';
+import { Ability, Rarity } from 'components/BattleMode/Ability';
 
 interface CardProps {
   ability: Ability;
 }
 
-export const Card = ({ ability }: CardProps) => {
+export const Card: FC<CardProps> = ({ ability }) => {
   let rarityName: string = '';
   let color: string = '';
   switch (ability.rarity) {
-    case 0:
+    case Rarity.Common:
       rarityName = 'Common';
       color = 'DarkSlateGrey';
       break;
-    case 1:
-      rarityName = 'Unommon';
+    case Rarity.Uncommon:
+      rarityName = 'Uncommon';
       color = 'DarkGreen';
       break;
-    case 2:
+    case Rarity.Rare:
       rarityName = 'Rare';
       color = 'DarkCyan';
       break;
-    case 3:
+    case Rarity.Legendary:
       rarityName = 'Legendary';
       color = 'DarkOrange';
       break;
-    case 4:
+    case Rarity.Mythic:
       rarityName = 'Mythic';
       color = 'DarkRed';
       break;
     default:
       break;
   }
+
   return (
     <div className={styles.card}>
       <div className={styles.container}>
@@ -44,11 +44,14 @@ export const Card = ({ ability }: CardProps) => {
           {rarityName}
         </p>
         <p>{ability.description}</p>
-        <img
-          src="http://localhost:3000/auto-battler-trader/img/Energy2.png"
-          className={styles.energycost}
-        ></img>
-        <div className={styles.energytext}>{ability.energyCost}</div>
+        <div className={styles.energycontainer}>
+          <div className={styles.energytext}>{ability.energyCost}</div>
+          <img
+            src="http://localhost:3000/auto-battler-trader/img/Energy2.png"
+            alt="EnergyCostImage"
+            className={styles.energycost}
+          />
+        </div>
       </div>
     </div>
   );

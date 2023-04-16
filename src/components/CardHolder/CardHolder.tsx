@@ -1,33 +1,26 @@
-import { Card } from 'components/Card/Card';
-import { useEffect, useState } from 'react';
-import styles from './styles.module.css';
-import { Ability, Attribute, Entity, Rarity } from 'components';
+import { FC, useState } from 'react';
+import { Ability } from 'components/BattleMode/Ability';
 import {
   DragDropContext,
+  DragUpdate,
+  Draggable,
+  DraggableLocation,
   DropResult,
   Droppable,
-  DroppableProvided,
 } from 'react-beautiful-dnd';
-import { Draggable } from 'react-beautiful-dnd';
 
 interface CardHolderProps {
-  cards: Ability[];
+  unlockedAbilitiesList: Ability[];
+  equippedAbilities?: Ability[];
 }
 
-export const CardHolder = ({ cards }: CardHolderProps) => {
-  const [abilityList, setAbilityList] = useState(cards);
-  const reorder = (
-    list: Ability[],
-    startIndex: number,
-    endIndex: number,
-  ) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-
-    return result;
-  };
-
+export const CardHolder: FC<CardHolderProps> = ({
+  unlockedAbilitiesList,
+  equippedAbilities = [],
+}) => {
+  const [equippedList, setEquippedList] =
+    useState<Ability[]>(equippedAbilities);
+  const [unlockedList, setUnlockedList] = useState(unlockedAbilitiesList);
   const grid = 30;
   const getItemStyle = (isDragging: any, draggableStyle: any) => ({
     // some basic styles to make the items look a bit nicer
@@ -51,31 +44,50 @@ export const CardHolder = ({ cards }: CardHolderProps) => {
     width: '100%',
   });
 
-  const endDrag = (result: DropResult) => {
+  function endDrag(result: DropResult): void {
+    //if there is no destination return
     if (!result.destination) {
       return;
     }
-    const items = reorder(
-      abilityList,
-      result.source.index,
-      result.destination.index,
-    );
-    setAbilityList(items);
-  };
+    const destination: DraggableLocation = result.destination;
+    const source: DraggableLocation = result.source;
+    //if we are not moving it, return.
+    if (
+      source.droppableId === destination.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    const start = source.droppableId;
+    const end = destination.droppableId;
+
+    // If start is the same as end, we're in the same column
+    if (start === end) {
+      // Move the item within the list
+      // Start by making a new list without the dragged item
+      if (start === 'equipped') {
+        const newList = equippedList.filter(
+          (item, index) => index !== source.index,
+        );
+        newList.splice(destination.index, 0, equippedList[source.index]);
+      }
+    }
+  }
+
   return (
-    <DragDropContext onDragEnd={endDrag}>
-      <Droppable direction="horizontal" droppableId="droppable">
+    <DragDropContext onDragEnd={result => endDrag(result)}>
+      <Droppable direction="horizontal" droppableId="equipped">
         {(provided, snapshot) => (
           <div
             {...provided.droppableProps}
             ref={provided.innerRef}
             style={getListStyle(
               snapshot.isDraggingOver,
-              abilityList.length,
+              equippedList.length,
             )}
-            {...provided.droppableProps}
           >
-            {abilityList.map((item, index) => (
+            {equippedList.map((item, index) => (
               <Draggable
                 key={item.id}
                 draggableId={item.id.toString()}
@@ -83,7 +95,6 @@ export const CardHolder = ({ cards }: CardHolderProps) => {
               >
                 {(provided, snapshot) => (
                   <div
-                    className={styles.main}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
@@ -92,7 +103,44 @@ export const CardHolder = ({ cards }: CardHolderProps) => {
                       provided.draggableProps.style,
                     )}
                   >
-                    <Card ability={item}></Card>
+                    {item.description}
+                    {/*<Card ability={item}></Card>*/}
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+      <Droppable direction="horizontal" droppableId="unlocked">
+        {(provided, snapshot) => (
+          <div
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            style={getListStyle(
+              snapshot.isDraggingOver,
+              unlockedList.length,
+            )}
+          >
+            {unlockedList.map((item, index) => (
+              <Draggable
+                key={item.id}
+                draggableId={(item.id + 100).toString()}
+                index={index}
+              >
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    style={getItemStyle(
+                      snapshot.isDragging,
+                      provided.draggableProps.style,
+                    )}
+                  >
+                    {item.description}
+                    {/*<Card ability={item}></Card>*/}
                   </div>
                 )}
               </Draggable>

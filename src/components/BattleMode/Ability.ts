@@ -1,4 +1,4 @@
-import { Entity } from './index';
+import { Entity } from './Entity';
 
 export class Ability {
   public name: string;
@@ -6,14 +6,16 @@ export class Ability {
   public description: string;
   public energyCost: number;
   public rarity: Rarity;
-  public applied: (parent: Entity) => void;
+  public applied?: (parent: Entity) => void;
+  public parent?: Entity;
   constructor(
     name: string,
     id: number,
     description: string,
     energyCost: number,
     rarity: Rarity,
-    applied: (parent: Entity) => void,
+    applied?: (parent: Entity) => void,
+    activated?: (parent: Entity) => void,
   ) {
     this.name = name;
     this.id = id;
@@ -22,22 +24,6 @@ export class Ability {
     this.rarity = rarity;
     this.applied = applied;
   }
-}
-export class ActiveAbility extends Ability {
-  public activationSpeed: number;
-  constructor(
-    name: string,
-    id: number,
-    description: string,
-    energyCost: number,
-    rarity: Rarity,
-    applied: (parent: Entity) => void,
-    activateSpeed: number,
-  ) {
-    super(name, id, description, energyCost, rarity, applied);
-    this.activationSpeed = activateSpeed;
-  }
-  activate() {}
 }
 
 export enum Rarity {

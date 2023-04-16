@@ -1,4 +1,5 @@
-import { Attribute, Entity } from './index';
+import { Attribute } from './Attribute';
+import { Entity } from './Entity';
 
 export class Attack {
   public baseDamage: number;
