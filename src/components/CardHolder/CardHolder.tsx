@@ -1,40 +1,30 @@
 import { FC, useState } from 'react';
 import { Ability } from 'components/BattleMode/Ability';
-import {
-  DragDropContext,
-  DragUpdate,
-  Draggable,
-  DraggableLocation,
-  DropResult,
-  Droppable,
-} from 'react-beautiful-dnd';
+import { DragDropContext, DragUpdate, Draggable, DraggableLocation, DropResult, Droppable } from 'react-beautiful-dnd';
+import { Card } from 'components/Card/Card';
 
 interface CardHolderProps {
   unlockedAbilitiesList: Ability[];
   equippedAbilities?: Ability[];
 }
 
-export const CardHolder: FC<CardHolderProps> = ({
-  unlockedAbilitiesList,
-  equippedAbilities = [],
-}) => {
-  const [equippedList, setEquippedList] =
-    useState<Ability[]>(equippedAbilities);
+export const CardHolder: FC<CardHolderProps> = ({ unlockedAbilitiesList, equippedAbilities = [] }) => {
+  const [equippedList, setEquippedList] = useState<Ability[]>(equippedAbilities);
   const [unlockedList, setUnlockedList] = useState(unlockedAbilitiesList);
   const grid = 30;
   const getItemStyle = (isDragging: any, draggableStyle: any) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: 'none',
     //padding: grid * 2,
-    width: 200,
-    height: '300px',
+    width: '150px',
+    height: '250px',
     margin: `0 ${grid}px 0 0`,
 
     // change background colour if dragging
-    background: isDragging ? 'lightgreen' : 'grey',
+    //background: isDragging ? 'lightgreen' : 'grey',
 
     // styles we need to apply on draggables
-    ...draggableStyle,
+    ...draggableStyle
   });
 
   const getListStyle = (isDraggingOver: boolean, itemsLength: number) => ({
@@ -42,6 +32,7 @@ export const CardHolder: FC<CardHolderProps> = ({
     display: 'flex',
     padding: grid,
     width: '100%',
+    height: '300px'
   });
 
   function endDrag(result: DropResult): void {
@@ -52,10 +43,7 @@ export const CardHolder: FC<CardHolderProps> = ({
     const destination: DraggableLocation = result.destination;
     const source: DraggableLocation = result.source;
     //if we are not moving it, return.
-    if (
-      source.droppableId === destination.droppableId &&
-      destination.index === source.index
-    ) {
+    if (source.droppableId === destination.droppableId && destination.index === source.index) {
       return;
     }
 
@@ -66,11 +54,29 @@ export const CardHolder: FC<CardHolderProps> = ({
     if (start === end) {
       // Move the item within the list
       // Start by making a new list without the dragged item
-      if (start === 'equipped') {
-        const newList = equippedList.filter(
-          (item, index) => index !== source.index,
-        );
+      if (start === 'unlocked') {
+        const newList = unlockedList.filter((item, index) => index !== source.index);
+        newList.splice(destination.index, 0, unlockedList[source.index]);
+        setUnlockedList(unlockedList => [...newList]);
+      } else if (start === 'equiped') {
+        const newList = equippedList.filter((item, index) => index !== source.index);
         newList.splice(destination.index, 0, equippedList[source.index]);
+        setEquippedList(equippedList => [...newList]);
+      }
+    } else {
+      if (start === 'unlocked' && end === 'equipped') {
+        const newUnlockedList = unlockedList.filter((item, index) => index !== source.index);
+        const newEquippedList = [...equippedList];
+        newEquippedList.splice(destination.index, 0, unlockedList[source.index]);
+        setUnlockedList(unlockedList => [...newUnlockedList]);
+        setEquippedList(equippedList => [...newEquippedList]);
+      } else if (start === 'equipped' && end === 'unlocked') {
+        console.log('Visszafele huzas');
+        const newEquippedList = equippedList.filter((item, index) => index !== source.index);
+        const newUnlockedList = [...unlockedList];
+        newUnlockedList.splice(destination.index, 0, equippedList[source.index]);
+        setUnlockedList(unlockedList => [...newUnlockedList]);
+        setEquippedList(equippedList => [...newEquippedList]);
       }
     }
   }
@@ -82,29 +88,18 @@ export const CardHolder: FC<CardHolderProps> = ({
           <div
             {...provided.droppableProps}
             ref={provided.innerRef}
-            style={getListStyle(
-              snapshot.isDraggingOver,
-              equippedList.length,
-            )}
+            style={getListStyle(snapshot.isDraggingOver, equippedList.length)}
           >
             {equippedList.map((item, index) => (
-              <Draggable
-                key={item.id}
-                draggableId={item.id.toString()}
-                index={index}
-              >
+              <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                 {(provided, snapshot) => (
                   <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    style={getItemStyle(
-                      snapshot.isDragging,
-                      provided.draggableProps.style,
-                    )}
+                    style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                   >
-                    {item.description}
-                    {/*<Card ability={item}></Card>*/}
+                    <Card ability={item}></Card>
                   </div>
                 )}
               </Draggable>
@@ -118,29 +113,18 @@ export const CardHolder: FC<CardHolderProps> = ({
           <div
             {...provided.droppableProps}
             ref={provided.innerRef}
-            style={getListStyle(
-              snapshot.isDraggingOver,
-              unlockedList.length,
-            )}
+            style={getListStyle(snapshot.isDraggingOver, unlockedList.length)}
           >
             {unlockedList.map((item, index) => (
-              <Draggable
-                key={item.id}
-                draggableId={(item.id + 100).toString()}
-                index={index}
-              >
+              <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                 {(provided, snapshot) => (
                   <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    style={getItemStyle(
-                      snapshot.isDragging,
-                      provided.draggableProps.style,
-                    )}
+                    style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                   >
-                    {item.description}
-                    {/*<Card ability={item}></Card>*/}
+                    <Card ability={item}></Card>
                   </div>
                 )}
               </Draggable>

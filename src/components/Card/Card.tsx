@@ -1,10 +1,28 @@
 import { FC } from 'react';
 import styles from './styles.module.css';
 import { Ability, Rarity } from 'components/BattleMode/Ability';
+import styled from 'styled-components';
 
 interface CardProps {
   ability: Ability;
 }
+
+const Description = styled.div`
+  font-size: small;
+`;
+
+const CardWrapper = styled.div`
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  background-color: white;
+  border-radius: 15px;
+
+  width: 100%;
+  height: 100%;
+  &:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  }
+`;
 
 export const Card: FC<CardProps> = ({ ability }) => {
   let rarityName: string = '';
@@ -35,7 +53,8 @@ export const Card: FC<CardProps> = ({ ability }) => {
   }
 
   return (
-    <div className={styles.card}>
+    <CardWrapper>
+      <div className={styles.energytext}>{ability.energyCost}</div>
       <div className={styles.container}>
         <h4>
           <p style={{ color: color }}>{ability.name}</p>
@@ -43,16 +62,8 @@ export const Card: FC<CardProps> = ({ ability }) => {
         <p className={styles.rarity} style={{ color: color }}>
           {rarityName}
         </p>
-        <p>{ability.description}</p>
-        <div className={styles.energycontainer}>
-          <div className={styles.energytext}>{ability.energyCost}</div>
-          <img
-            src="http://localhost:3000/auto-battler-trader/img/Energy2.png"
-            alt="EnergyCostImage"
-            className={styles.energycost}
-          />
-        </div>
+        <Description>{ability.description}</Description>
       </div>
-    </div>
+    </CardWrapper>
   );
 };
