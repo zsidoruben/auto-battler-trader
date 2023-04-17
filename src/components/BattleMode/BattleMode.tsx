@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import styles from './styles.module.css';
-import { CardHolder } from 'components/CardHolder/CardHolder';
+import { DeckbuildingPage } from 'components/CardHolder/DeckBuilding';
 import { allAbilities } from 'shared/Abilities';
 import { Entity } from './Entity';
 import { findGcd } from './GDC';

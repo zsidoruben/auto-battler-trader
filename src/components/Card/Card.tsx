@@ -6,16 +6,40 @@ import styled from 'styled-components';
 interface CardProps {
   ability: Ability;
 }
-
-const Description = styled.div`
-  font-size: small;
+const STAbilityName = styled.h4`
+  font-weight: bold;
+  padding: 0 0 0 5px;
+  margin: 0px;
+`;
+const STRarityName = styled.p`
+  font-weight: bold;
+  padding: 0 0 0 0;
 `;
 
-const CardWrapper = styled.div`
+const STEnergyText = styled.div`
+  font-weight: bold;
+  font-size: 24px;
+  padding: 5px 0px 0px 10px;
+  -webkit-text-fill-color: darkcyan;
+`;
+
+const STDescription = styled.div`
+  font-size: small;
+  min-height: 90%;
+`;
+
+const STContainer = styled.div`
+  text-align: center;
+  padding: 0px 0px 0px 0px;
+  position: relative;
+`;
+
+const STCardWrapper = styled.div`
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
   background-color: white;
   border-radius: 15px;
+  border: 4px solid black;
 
   width: 100%;
   height: 100%;
@@ -53,17 +77,13 @@ export const Card: FC<CardProps> = ({ ability }) => {
   }
 
   return (
-    <CardWrapper>
-      <div className={styles.energytext}>{ability.energyCost}</div>
-      <div className={styles.container}>
-        <h4>
-          <p style={{ color: color }}>{ability.name}</p>
-        </h4>
-        <p className={styles.rarity} style={{ color: color }}>
-          {rarityName}
-        </p>
-        <Description>{ability.description}</Description>
-      </div>
-    </CardWrapper>
+    <STCardWrapper style={{ borderColor: color }}>
+      <STEnergyText>{ability.energyCost}</STEnergyText>
+      <STContainer>
+        <STAbilityName style={{ color: color }}>{ability.name}</STAbilityName>
+        <STRarityName style={{ color: color }}>{rarityName}</STRarityName>
+        <STDescription>{ability.description}</STDescription>
+      </STContainer>
+    </STCardWrapper>
   );
 };

@@ -8,7 +8,7 @@ interface CardHolderProps {
   equippedAbilities?: Ability[];
 }
 
-export const CardHolder: FC<CardHolderProps> = ({ unlockedAbilitiesList, equippedAbilities = [] }) => {
+export const DeckbuildingPage: FC<CardHolderProps> = ({ unlockedAbilitiesList, equippedAbilities = [] }) => {
   const [equippedList, setEquippedList] = useState<Ability[]>(equippedAbilities);
   const [unlockedList, setUnlockedList] = useState(unlockedAbilitiesList);
   const grid = 30;
@@ -28,11 +28,13 @@ export const CardHolder: FC<CardHolderProps> = ({ unlockedAbilitiesList, equippe
   });
 
   const getListStyle = (isDraggingOver: boolean, itemsLength: number) => ({
-    background: isDraggingOver ? 'lightblue' : 'lightgrey',
+    background: 'white',
     display: 'flex',
     padding: grid,
-    width: '100%',
-    height: '300px'
+    width: '90%',
+    height: '300px',
+    border: '5px solid #001b39',
+    'border-radius': '10px'
   });
 
   function endDrag(result: DropResult): void {
@@ -58,7 +60,7 @@ export const CardHolder: FC<CardHolderProps> = ({ unlockedAbilitiesList, equippe
         const newList = unlockedList.filter((item, index) => index !== source.index);
         newList.splice(destination.index, 0, unlockedList[source.index]);
         setUnlockedList(unlockedList => [...newList]);
-      } else if (start === 'equiped') {
+      } else if (start === 'equipped') {
         const newList = equippedList.filter((item, index) => index !== source.index);
         newList.splice(destination.index, 0, equippedList[source.index]);
         setEquippedList(equippedList => [...newList]);
