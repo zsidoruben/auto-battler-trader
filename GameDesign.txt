@@ -1,0 +1,15 @@
+Problems with game idea
+-metas / cards that are not rare but very powerful
+-if a player gets one really good card they will keep building around it, with no need to discover new synergies --> solution: reduced xp gain
+
+What I want to encourage:
+-discover new synergies --> Specific synergies when discovered play a unique animation and rewards gems
+-experimentaton --> every time you try a build you haven't tried bvefore, you gain way more XP
+-problem solving against a specific build --> spedcific Champions to defeat with guaranteed card rewards.
+-adaptation to sircumstances, environments --> Changing bonuses to different abilities every 3 days
+-trying out new builds --> With the same deck, you can only earn a certain amount of XP
+
+What feeling do I want players to ffel:
+surprise(discovering synergies)
+status(showing off player max ranking in a league)
+belonging to a community(trading on discord, reddit)
