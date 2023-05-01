@@ -1,7 +1,7 @@
 import { StatModifier } from './StatModifier';
 
 class CharacterStat {
-  public hasMin = false;
+  /*public hasMin = false;
   public min = 0;
   public BaseValue: number;
 
@@ -72,24 +72,24 @@ class CharacterStat {
     for (let i = 0; i < this.statModifiers.length; i++) {
       const mod = this.statModifiers[i];
 
-      if (mod.type === 100 /* Flat */) {
+      if (mod.type === 100 ) {
         finalValue += mod.value;
-      } else if (mod.type === 200 /* PercentAdd */) {
+      } else if (mod.type === 200) {
         sumPercentAdd += mod.value;
 
         if (
           i + 1 >= this.statModifiers.length ||
-          this.statModifiers[i + 1].type !== 200 /* PercentAdd */
+          this.statModifiers[i + 1].type !== 200
         ) {
           finalValue *= 1 + sumPercentAdd;
           sumPercentAdd = 0;
         }
-      } else if (mod.type === 300 /* PercentMult */) {
+      } else if (mod.type === 300 ) {
         finalValue *= mod.value;
       }
     }
 
     // Workaround for floating-point calculation errors
     return Math.round(finalValue * 10000) / 10000;
-  }
+  }*/
 }

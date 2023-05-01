@@ -1,24 +1,19 @@
+import { Ability } from './Ability';
+
 export enum StatModType {
-  Flat = 100,
-  PercentAdd = 200,
-  PercentMult = 300,
+  Flat = 1,
+  PercentAdd = 2,
+  PercentMult = 3
 }
 
 export class StatModifier {
   public value: number;
   public type: StatModType;
-  public order: number;
-  public source: any;
+  public source: Ability;
 
-  constructor(
-    value: number,
-    type: StatModType,
-    order: number,
-    source: any,
-  ) {
+  constructor(value: number, type: StatModType, source: any) {
     this.value = value;
     this.type = type;
-    this.order = order;
     this.source = source;
   }
 }

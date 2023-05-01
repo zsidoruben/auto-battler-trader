@@ -11,12 +11,7 @@ export class Entity {
   public abilities: Ability[] = [];
   public attributes: Attribute[] = [];
   public isDead: boolean = false;
-  constructor(
-    name: string,
-    health: number,
-    attackSpeed: number,
-    damage: number,
-  ) {
+  constructor(name: string, health: number, attackSpeed: number, damage: number) {
     this.name = name;
     this.health = health;
     this.maxHealth = health;
@@ -28,7 +23,7 @@ export class Entity {
     let finalDamage = this.damage;
     this.attributes.forEach((element: Attribute) => {
       if (element.name.toLowerCase().includes('damage')) {
-        finalDamage += element.value;
+        finalDamage += element.baseValue;
       }
     });
     target.takeDamage(finalDamage);
@@ -56,7 +51,7 @@ export class Entity {
   addAttribute(attr: Attribute) {
     const attribute = this.attributes.find(a => a.name === attr.name);
     if (attribute) {
-      attribute.value += attr.value;
+      attribute.baseValue += attr.baseValue;
     } else {
       this.attributes.push(attr);
     }

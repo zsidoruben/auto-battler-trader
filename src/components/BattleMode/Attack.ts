@@ -16,7 +16,7 @@ export class Attack {
     let finalDamage = this.baseDamage;
     parent.attributes.forEach((element: Attribute) => {
       if (element.name.toLowerCase().includes('damage')) {
-        finalDamage += element.value;
+        finalDamage += element.baseValue;
       }
     });
     target.takeDamage(finalDamage);
@@ -28,5 +28,5 @@ export enum AttackType {
   Random,
   BiggertHP,
   EnemyPlayer,
-  None,
+  None
 }
