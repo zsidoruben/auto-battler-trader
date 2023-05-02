@@ -54,7 +54,7 @@ export const Card: FC<CardProps> = ({ ability }) => {
   switch (ability.rarity) {
     case Rarity.Common:
       rarityName = 'Common';
-      color = 'DarkSlateGrey';
+      color = 'LightGrey';
       break;
     case Rarity.Uncommon:
       rarityName = 'Uncommon';

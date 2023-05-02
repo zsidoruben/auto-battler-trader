@@ -1,15 +1,16 @@
-import { FC, useState } from 'react';
+import { FC, useState, useContext } from 'react';
 import { Ability } from 'components/BattleMode/Ability';
 import { DragDropContext, DragUpdate, Draggable, DraggableLocation, DropResult, Droppable } from 'react-beautiful-dnd';
 import { Card } from 'components/Card/Card';
-
+import { EquippedProvider, EquippedContext, EquippedContextType } from 'shared/EquippedContext';
 interface CardHolderProps {
   unlockedAbilitiesList: Ability[];
   equippedAbilities?: Ability[];
 }
 
-export const DeckbuildingPage: FC<CardHolderProps> = ({ unlockedAbilitiesList, equippedAbilities = [] }) => {
-  const [equippedList, setEquippedList] = useState<Ability[]>(equippedAbilities);
+export const DeckbuildingPage: FC<CardHolderProps> = ({ unlockedAbilitiesList }) => {
+  const { equippedAbilities, changeEquippedList } = useContext(EquippedContext) as EquippedContextType;
+
   const [unlockedList, setUnlockedList] = useState(unlockedAbilitiesList);
   const grid = 30;
   const getItemStyle = (isDragging: any, draggableStyle: any) => ({
@@ -61,28 +62,29 @@ export const DeckbuildingPage: FC<CardHolderProps> = ({ unlockedAbilitiesList, e
         newList.splice(destination.index, 0, unlockedList[source.index]);
         setUnlockedList(unlockedList => [...newList]);
       } else if (start === 'equipped') {
-        const newList = equippedList.filter((item, index) => index !== source.index);
-        newList.splice(destination.index, 0, equippedList[source.index]);
-        setEquippedList(equippedList => [...newList]);
+        const newList = equippedAbilities.filter((item, index) => index !== source.index);
+        newList.splice(destination.index, 0, equippedAbilities[source.index]);
+        changeEquippedList([...newList]);
       }
     } else {
       if (start === 'unlocked' && end === 'equipped') {
         const newUnlockedList = unlockedList.filter((item, index) => index !== source.index);
-        const newEquippedList = [...equippedList];
+        const newEquippedList = [...equippedAbilities];
         newEquippedList.splice(destination.index, 0, unlockedList[source.index]);
         setUnlockedList(unlockedList => [...newUnlockedList]);
-        setEquippedList(equippedList => [...newEquippedList]);
+        changeEquippedList([...newEquippedList]);
       } else if (start === 'equipped' && end === 'unlocked') {
         console.log('Visszafele huzas');
-        const newEquippedList = equippedList.filter((item, index) => index !== source.index);
+        const newEquippedList = equippedAbilities.filter((item, index) => index !== source.index);
         const newUnlockedList = [...unlockedList];
-        newUnlockedList.splice(destination.index, 0, equippedList[source.index]);
+        newUnlockedList.splice(destination.index, 0, equippedAbilities[source.index]);
         setUnlockedList(unlockedList => [...newUnlockedList]);
-        setEquippedList(equippedList => [...newEquippedList]);
+        changeEquippedList([...newEquippedList]);
       }
     }
   }
 
+  //const energyTotal = equippedList.reduce((total, current) => total + current.energyCost, 0);
   return (
     <DragDropContext onDragEnd={result => endDrag(result)}>
       <Droppable direction="horizontal" droppableId="equipped">
@@ -90,9 +92,9 @@ export const DeckbuildingPage: FC<CardHolderProps> = ({ unlockedAbilitiesList, e
           <div
             {...provided.droppableProps}
             ref={provided.innerRef}
-            style={getListStyle(snapshot.isDraggingOver, equippedList.length)}
+            style={getListStyle(snapshot.isDraggingOver, equippedAbilities.length)}
           >
-            {equippedList.map((item, index) => (
+            {equippedAbilities.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                 {(provided, snapshot) => (
                   <div
