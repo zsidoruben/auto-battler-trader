@@ -22,14 +22,6 @@ export const BattleMode: FC = () => {
   const enemy: Entity = new Entity('Kocsog', 100, 10, 10);
   const gdc = findGcd([player.attackSpeed, enemy.attackSpeed]);
   console.log('GDC: ' + gdc);
-  //attributes
-  player.addAttribute(new Attribute('Ice Damage', 50));
-  player.addAttribute(new Attribute('Earth Damage', 0.5));
-  player.addAttribute(new Attribute('Blood Damage', 0.5));
-  player.addAttribute(new Attribute('Rot Damage', 0.5));
-  player.addAttribute(new Attribute('Physical Damage', 1));
-  //abilities
-
   //game:
   let time: number = 0;
   const simutate = () => {

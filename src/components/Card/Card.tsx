@@ -1,11 +1,11 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Ability, Rarity } from 'components/BattleMode/Ability';
 import styled from 'styled-components';
+import { Tilt } from 'components/Tilt/Tilt';
 
 const CardWrapper = styled.div`
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
-  background-color: ${props => props.color};
   border-radius: 15px;
   border: 4px solid black;
 
@@ -42,6 +42,7 @@ const Description = styled.div`
   font-size: small;
   min-height: 90%;
   user-select: none;
+  -webkit-text-fill-color: ${props => props.color};
 `;
 
 const Container = styled.div`
@@ -57,19 +58,42 @@ interface CardProps {
 }
 
 export const Card: FC<CardProps> = ({ ability, isDragging = false, draggableStyle = null }) => {
-  const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
+  /* 
+  {
+    reverse:           false,  // reverse the tilt direction
+    max:               35,     // max tilt rotation (degrees)
+    perspective:       1000,   // Transform perspective, the lower the more extreme the tilt gets.
+    scale:             1,      // 2 = 200%, 1.5 = 150%, etc..
+    speed:             300,    // Speed of the enter/exit transition
+    transition:        true,   // Set a transition on enter/exit.
+    axis:              null,   // What axis should be disabled. Can be X or Y.
+    reset:             true,   // If the tilt effect has to be reset on exit.
+    easing:            "cubic-bezier(.03,.98,.52,.99)",    // Easing on enter/exit.
+    glare:             false,   // if it should have a "glare" effect
+    "max-glare":       1,      // the maximum "glare" opacity (1 = 100%, 0.5 = 50%)
+    "glare-prerender": false   // false = VanillaTilt creates the glare elements for you, otherwise
+                               // you need to add .js-tilt-glare>.js-tilt-glare-inner by yourself
+} */
+  const tiltOptions = {
+    scale: 1.2,
+    speed: 1000,
+    max: 20,
+    reverse: true,
+    glare: true,
+    'max-glare': 0.3
+  };
+  const getItemStyle = (isDragging: boolean, draggableStyle: any): any => ({
     // some basic styles to make the items look a bit nicer
     userSelect: 'none',
     //padding: grid * 2,
     width: '150px',
     height: '250px',
     margin: `0 30px 0 0`,
-
+    borderColor: color,
     // change background colour if dragging
-    background: isDragging ? 'lightgreen' : 'none',
-
+    background: 'white',
+    draggableStyle
     // styles we need to apply on draggables
-    ...draggableStyle
   });
   let rarityName: string = '';
   let color: string = '';
@@ -99,13 +123,15 @@ export const Card: FC<CardProps> = ({ ability, isDragging = false, draggableStyl
   }
 
   return (
-    <CardWrapper color="White" style={{ borderColor: color }}>
-      <EnergyText>{ability.energyCost}</EnergyText>
-      <Container>
-        <AbilityName style={{ color: color }}>{ability.name}</AbilityName>
-        <RarityName style={{ color: color }}>{rarityName}</RarityName>
-        <Description>{ability.description}</Description>
-      </Container>
-    </CardWrapper>
+    <Tilt optionsProp={tiltOptions}>
+      <CardWrapper style={getItemStyle(isDragging, draggableStyle)}>
+        <EnergyText>{ability.energyCost}</EnergyText>
+        <Container>
+          <AbilityName style={{ color: color }}>{ability.name}</AbilityName>
+          <RarityName style={{ color: color }}>{rarityName}</RarityName>
+          <Description color="black">{ability.description}</Description>
+        </Container>
+      </CardWrapper>
+    </Tilt>
   );
 };
