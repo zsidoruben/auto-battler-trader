@@ -11,8 +11,9 @@ const CardWrapper = styled.div`
 
   width: 150px;
   height: 250px;
-  margin: 10px;
+  margin: 5px;
   user-select: none;
+  transform-style: preserve-3d;
   &:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   }
@@ -23,18 +24,21 @@ const AbilityName = styled.h4`
   padding: 0 0 0 5px;
   margin: 0px;
   user-select: none;
+  transform: translateZ(3px);
 `;
 const RarityName = styled.p`
   font-weight: bold;
   padding: 0 0 0 0;
   user-select: none;
+  transform: translateZ(3px);
 `;
 
 const EnergyText = styled.div`
   font-weight: bold;
   font-size: 24px;
-  padding: 5px 0px 0px 10px;
+  padding: 5px 0px 0px 5px;
   -webkit-text-fill-color: darkcyan;
+  transform: translateZ(3px);
   user-select: none;
 `;
 
@@ -43,12 +47,14 @@ const Description = styled.div`
   min-height: 90%;
   user-select: none;
   -webkit-text-fill-color: ${props => props.color};
+  transform: translateZ(3px);
 `;
 
 const Container = styled.div`
   text-align: center;
   padding: 0px 0px 0px 0px;
   position: relative;
+  transform: translateZ(3px);
 `;
 
 interface CardProps {

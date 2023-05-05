@@ -1,10 +1,11 @@
-import { Ability, Rarity } from 'components/BattleMode/Ability';
+import { Ability, Activatable, Appliable, CardType, Rarity } from 'components/BattleMode/Ability';
 import { Attribute } from 'components/BattleMode/Attribute';
 import { Entity } from 'components/BattleMode/Entity';
 
-const fireResistance: Ability = new Ability(
-  'Fire Resistance',
+/*const fireResistance: Ability = new Ability(
   1,
+  'Fire Resistance',
+  [CardType.Passive],
   'Gain 10 Fire Resistance.',
   2,
   Rarity.Common,
@@ -14,8 +15,9 @@ const fireResistance: Ability = new Ability(
 );
 
 const darkDamage: Ability = new Ability(
-  'Dark Damage',
   2,
+  'Dark Damage',
+  [CardType.Passive],
   'Gain 10 Dark Damage.',
   2,
   Rarity.Uncommon,
@@ -24,9 +26,10 @@ const darkDamage: Ability = new Ability(
   }
 );
 const versatileOffense: Ability = new Ability(
-  'Versatile Offense',
   3,
-  'Gain exponentional Fire Damage based on the number of different damage type attributes.',
+  'Versatile Offense',
+  [CardType.Passive],
+  'Gain exponentional Fire Damage based on the number of different damage type attributes you have.',
   8,
   Rarity.Rare,
   (parent: Entity) => {
@@ -37,43 +40,34 @@ const versatileOffense: Ability = new Ability(
 );
 
 const darkKnight: Ability = new Ability(
-  'Dark Knight',
   4,
+  'Dark Knight',
+  [CardType.Active],
   'At the start of the game summon a Dark Knight',
   5,
   Rarity.Legendary,
   (parent: Entity) => {}
-);
-const energySyphon: Ability = new Ability(
-  'Energy Syphon',
-  5,
-  'Every 5 seconds, steal 5 energy from the opponent from their lowest energy source',
-  3,
-  Rarity.Mythic,
-  (parent: Entity) => {}
-);
-const burningBlood: Ability = new Ability(
-  'Burning Blood',
-  6,
-  'Your Blood burns. Gain 1 stack of burning every time you get hit.',
+);*/
+const punchAttribute = new Appliable((parent: Entity) => {
+  parent.addAttribute(new Attribute('Punch', 5));
+});
+const punchPassive: Ability = new Ability(
   1,
+  'Punch',
+  [CardType.Passive],
+  'Gain 5 Punch damage.',
+  2,
   Rarity.Common,
-  (parent: Entity) => {}
+  punchAttribute,
+  null,
+  null
 );
-const PhoenixBloodline: Ability = new Ability(
-  'Phoenix Bloodline',
-  7,
-  'Once per battle when you would die, regenerate 30% hp.',
-  10,
-  Rarity.Mythic,
-  (parent: Entity) => {}
+const punchActive: Activatable = new Activatable(
+  1,
+  (parent: Entity, target: Entity) => {
+    target.takeDamage(10 + parent.getAttribute('Punch') + parent.getAttribute('Physical'));
+  },
+  false
 );
-export const allAbilities = [
-  fireResistance,
-  darkDamage,
-  versatileOffense,
-  darkKnight,
-  energySyphon,
-  burningBlood,
-  PhoenixBloodline
-];
+const punch = new Ability(5, 'Punch', [CardType.Active], 'Punch', 4, Rarity.Common, null, punchActive, null);
+export const allAbilities = [punch, punchPassive];

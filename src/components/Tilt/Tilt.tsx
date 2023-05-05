@@ -1,4 +1,5 @@
 import { Children, FC, useEffect, useRef } from 'react';
+import { transform } from 'typescript';
 import VanillaTilt from 'vanilla-tilt';
 
 interface TiltProps {
@@ -11,5 +12,9 @@ export const Tilt: FC<TiltProps> = ({ children, optionsProp }) => {
   useEffect(() => {
     VanillaTilt.init(tilt.current, options);
   }, [options]);
-  return <div ref={tilt}>{children}</div>;
+  return (
+    <div style={{ transformStyle: 'preserve-3d' }} ref={tilt}>
+      {children}
+    </div>
+  );
 };

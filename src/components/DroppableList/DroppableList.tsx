@@ -13,7 +13,7 @@ export const DroppableList: FC<DroppableListProps> = ({ abilitiesList, droppable
     background: 'white',
     display: 'flex',
     padding: grid,
-    width: '90%',
+    width: '1620px',
     height: '300px',
     border: '1px solid #ccc'
   });

@@ -1,4 +1,4 @@
-import { Ability } from './Ability';
+import { Ability, CardType } from './Ability';
 import { Attribute } from './Attribute';
 export class Entity {
   public name: string;
@@ -9,8 +9,15 @@ export class Entity {
   public damage: number;
 
   public abilities: Ability[] = [];
+  public passiveAbilities: Ability[] = [];
+  public activeAbilities: Ability[] = [];
+  public triggerAbilities: Ability[] = [];
+  public growthAbilities: Ability[] = [];
+
   public attributes: Attribute[] = [];
   public isDead: boolean = false;
+
+  private armor: number = 0;
   constructor(name: string, health: number, attackSpeed: number, damage: number) {
     this.name = name;
     this.health = health;
@@ -19,22 +26,54 @@ export class Entity {
     this.nextAttack = attackSpeed;
     this.damage = damage;
   }
-  attack(target: Entity, time: number) {
-    let finalDamage = this.damage;
-    this.attributes.forEach((element: Attribute) => {
-      if (element.name.toLowerCase().includes('damage')) {
-        finalDamage += element.baseValue;
+  getAttribute(name: string): number {
+    for (let i = 0; i < this.attributes.length; i++) {
+      if (this.attributes[i].name === name) {
+        return this.attributes[i].Value;
       }
-    });
-    target.takeDamage(finalDamage);
-    this.nextAttack = time + this.attackSpeed;
+    }
+    return 0;
   }
-
+  getAttributeCount(): number {
+    return this.attributes.length;
+  }
+  applyAbilities() {}
+  registerAbilities() {}
   addAbility(ability: Ability) {
     this.abilities.push(ability);
-    if (ability.applied) {
-      ability.applied(this);
+    if (ability.types.includes(CardType.Passive)) {
+      this.passiveAbilities.push(ability);
     }
+    if (ability.types.includes(CardType.Active)) {
+      this.activeAbilities.push(ability);
+    }
+    if (ability.types.includes(CardType.Trigger)) {
+      this.triggerAbilities.push(ability);
+    }
+    if (ability.types.includes(CardType.Growth)) {
+      this.growthAbilities.push(ability);
+    }
+  }
+  removeAbility(ability: Ability) {
+    this.abilities.splice(this.abilities.indexOf(ability), 1);
+    if (ability.types.includes(CardType.Passive)) {
+      this.passiveAbilities.splice(this.passiveAbilities.indexOf(ability), 1);
+    }
+    if (ability.types.includes(CardType.Active)) {
+      this.activeAbilities.splice(this.activeAbilities.indexOf(ability), 1);
+    }
+    if (ability.types.includes(CardType.Trigger)) {
+      this.triggerAbilities.splice(this.triggerAbilities.indexOf(ability), 1);
+    }
+    if (ability.types.includes(CardType.Growth)) {
+      this.growthAbilities.splice(this.growthAbilities.indexOf(ability), 1);
+    }
+  }
+  tryHit(damage: number) {
+    this.hit(damage);
+  }
+  hit(damage: number) {
+    this.takeDamage(damage);
   }
   takeDamage(damage: number) {
     console.log(this.name + ' takes ' + damage + ' damage');
@@ -55,11 +94,5 @@ export class Entity {
     } else {
       this.attributes.push(attr);
     }
-  }
-}
-
-export class Player extends Entity {
-  constructor(name: string, health: number, attack: number) {
-    super(name, health, 10, 10);
   }
 }

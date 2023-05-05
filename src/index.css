@@ -1,9 +1,7 @@
 body {
   font-family: sans-serif;
-  color: #fff;
-  display: flex;
+  color: black;
   align-items: center;
-  height: 100vh;
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
