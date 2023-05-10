@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/auto-battler-trader/static/css/main.e6c13ad2.css",
-    "main.js": "/auto-battler-trader/static/js/main.5f90b436.js",
+    "main.css": "/auto-battler-trader/static/css/main.642109e1.css",
+    "main.js": "/auto-battler-trader/static/js/main.98f0d0d2.js",
     "index.html": "/auto-battler-trader/index.html",
-    "main.e6c13ad2.css.map": "/auto-battler-trader/static/css/main.e6c13ad2.css.map",
-    "main.5f90b436.js.map": "/auto-battler-trader/static/js/main.5f90b436.js.map"
+    "main.642109e1.css.map": "/auto-battler-trader/static/css/main.642109e1.css.map",
+    "main.98f0d0d2.js.map": "/auto-battler-trader/static/js/main.98f0d0d2.js.map"
   },
   "entrypoints": [
-    "static/css/main.e6c13ad2.css",
-    "static/js/main.5f90b436.js"
+    "static/css/main.642109e1.css",
+    "static/js/main.98f0d0d2.js"
   ]
 }
