@@ -13,7 +13,7 @@ const Hit = styled.div`
 `;
 
 const Bar = styled.div`
-  background: #c54;
+  background: ${props => props.color};
   width: 100%;
   height: 10px;
   position: relative;
@@ -39,15 +39,16 @@ const HealthBar = styled.div`
 interface ProgressBarProps {
   maxHp: number;
   hp: number;
+  color: any;
 }
-export const ProgressBar: FC<ProgressBarProps> = ({ maxHp, hp }) => {
+export const ProgressBar: FC<ProgressBarProps> = ({ maxHp, hp, color }) => {
   const barWidth = (hp / maxHp) * 100;
   // setHitWidth((damage / hp) * 100);
   // setBarWidth((hpLeft / maxHp) * 100);
   return (
     <div>
       <HealthBar>
-        <Bar style={{ width: `${barWidth}%` }}></Bar>
+        <Bar color={color} style={{ width: `${barWidth}%` }}></Bar>
         <Hit style={{ width: `${0}%` }}></Hit>
 
         <div

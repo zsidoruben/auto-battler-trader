@@ -13,49 +13,37 @@ export class Ability {
   public trigger: Triggerable | null;
   public parent?: Entity;
 
-  constructor(
-    id: number,
-    name: string,
-    type: CardType[],
-    description: string,
-    energyCost: number,
-    rarity: Rarity,
-    passive: Appliable | null,
-    active: Activatable | null,
-    triggerable: Triggerable | null
-  ) {
-    this.id = id;
-    this.name = name;
-    this.types = type;
-    this.description = description;
-    this.energyCost = energyCost;
-    this.rarity = rarity;
+  constructor(ability: Ability) {
+    this.id = ability.id;
+    this.name = ability.name;
+    this.types = ability.types;
+    this.description = ability.description;
+    this.energyCost = ability.energyCost;
+    this.rarity = ability.rarity;
 
-    this.passive = passive;
-    this.active = active;
-    this.trigger = triggerable;
+    this.passive = ability.passive;
+    this.active = ability.active;
+    this.trigger = ability.trigger;
   }
-
-  activate(target: Entity, time: number) {}
 }
 
 export class Activatable {
   activationTime: number;
   nextActivationTime: number;
+  energyCost: number;
   activated: (parent: Entity, target: Entity) => void;
 
-  constructor(activationTime: number, activated: (parent: Entity, target: Entity) => void, instantAttack: boolean) {
-    if (instantAttack) {
-      this.nextActivationTime = 0;
-    } else {
-      this.nextActivationTime = activationTime;
-    }
+  constructor(activationTime: number, energyCost: number, activated: (parent: Entity, target: Entity) => void) {
+    this.nextActivationTime = 0;
+
+    this.energyCost = energyCost;
     this.activationTime = activationTime;
     this.activated = activated;
   }
   activate(parent: Entity, target: Entity, time: number) {
-    if (time > this.nextActivationTime) {
+    if (time > this.nextActivationTime && parent.energy >= this.energyCost) {
       this.activated(parent, target);
+      parent.energy -= this.energyCost;
       this.nextActivationTime = time + this.activationTime;
     }
   }

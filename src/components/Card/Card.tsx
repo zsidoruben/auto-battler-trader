@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { Ability, Rarity } from 'components/BattleMode/Ability';
+import { Ability, CardType, Rarity } from 'components/BattleMode/Ability';
 import styled from 'styled-components';
 import { Tilt } from 'components/Tilt/Tilt';
 
@@ -135,6 +135,17 @@ export const Card: FC<CardProps> = ({ ability, isDragging = false, draggableStyl
         <Container>
           <AbilityName style={{ color: color }}>{ability.name}</AbilityName>
           <RarityName style={{ color: color }}>{rarityName}</RarityName>
+          {ability.types.map(type => {
+            if (type === CardType.Active) {
+              return <RarityName style={{ color: color }}>Active</RarityName>;
+            } else if (type === CardType.Passive) {
+              return <RarityName style={{ color: color }}>Passive</RarityName>;
+            } else if (type === CardType.Trigger) {
+              return <RarityName style={{ color: color }}>Trigger</RarityName>;
+            } else if (type === CardType.Growth) {
+              return <RarityName style={{ color: color }}>Growth</RarityName>;
+            }
+          })}
           <Description color="black">{ability.description}</Description>
         </Container>
       </CardWrapper>

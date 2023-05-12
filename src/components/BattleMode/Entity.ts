@@ -4,6 +4,9 @@ export class Entity {
   public name: string;
   public health: number;
   public maxHealth;
+
+  public energy: number;
+  public maxEnergy: number;
   public attackSpeed: number;
   public nextAttack: number;
   public damage: number;
@@ -17,15 +20,21 @@ export class Entity {
   public attributes: Attribute[] = [];
   public isDead: boolean = false;
 
-  private armor: number = 0;
-  constructor(name: string, health: number, attackSpeed: number, damage: number) {
+  public armor: number = 0;
+  public healthRegen: number = 0;
+  public energyRegen: number = 0;
+  constructor(name: string, health: number, energy: number, attackSpeed: number, damage: number) {
     this.name = name;
     this.health = health;
     this.maxHealth = health;
+    this.energy = energy;
+    this.maxEnergy = energy;
     this.attackSpeed = attackSpeed;
     this.nextAttack = attackSpeed;
     this.damage = damage;
   }
+  regenerateHealth() {}
+  regenerateEnergy() {}
   getAttribute(name: string): number {
     for (let i = 0; i < this.attributes.length; i++) {
       if (this.attributes[i].name === name) {
@@ -70,15 +79,19 @@ export class Entity {
     }
   }
   tryHit(damage: number) {
+    //TODO: apply dodge
     this.hit(damage);
   }
   hit(damage: number) {
-    this.takeDamage(damage);
+    //TODO: apply armor
+    const final = Math.max(0, damage - this.armor);
+    this.takeDamage(final);
   }
   takeDamage(damage: number) {
     console.log(this.name + ' takes ' + damage + ' damage');
     this.health -= damage;
     if (this.health <= 0) {
+      this.health = 0;
       this.die();
     }
   }
@@ -87,12 +100,12 @@ export class Entity {
     console.log(this.name + ' is dead');
   }
 
-  addAttribute(attr: Attribute) {
-    const attribute = this.attributes.find(a => a.name === attr.name);
+  addAttribute(name: string, value: number) {
+    const attribute = this.attributes.find(a => a.name === name);
     if (attribute) {
-      attribute.baseValue += attr.baseValue;
+      attribute.baseValue += value;
     } else {
-      this.attributes.push(attr);
+      this.attributes.push(new Attribute(name, value));
     }
   }
 }

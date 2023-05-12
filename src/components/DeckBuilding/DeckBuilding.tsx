@@ -15,6 +15,7 @@ export const Deckbuilding: FC<CardHolderProps> = ({ unlockedAbilitiesList }) => 
   );
   function endDrag(result: DropResult): void {
     //if there is no destination return
+
     if (!result.destination) {
       return;
     }
@@ -65,6 +66,7 @@ export const Deckbuilding: FC<CardHolderProps> = ({ unlockedAbilitiesList }) => 
       <h1>Deck Building Screen</h1>
       <h4>Your current Heart Deck:</h4>
       <DragDropContext onDragEnd={result => endDrag(result)}>
+        <div></div>
         <DroppableList abilitiesList={equippedAbilities} droppableID="equipped" />
         <h4>Collection:</h4>
         <DroppableList abilitiesList={unlockedList} droppableID="unlocked" />

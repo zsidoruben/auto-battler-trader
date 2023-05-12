@@ -20,8 +20,8 @@ export const BattleMode: FC = () => {
   const { equippedAbilities, changeEquippedList } = useContext(EquippedContext) as EquippedContextType;
   const [time, setTime] = useState<number>(0);
   const [playSpeed, setPlaySpeed] = useState<number>(1);
-  const [player, SetPlayer] = useState<Entity>(new Entity('Rubenatya', 100, 2, 2));
-  const [enemy, SetEnemy] = useState<Entity>(new Entity('Enemy', 100, 1.2, 3));
+  const [player, SetPlayer] = useState<Entity>(new Entity('Rubenatya', 100, 100, 2, 2));
+  const [enemy, SetEnemy] = useState<Entity>(new Entity('Enemy', 100, 100, 1.2, 3));
   const [battleOngoing, setBattleOngoing] = useState<boolean>(false);
   const [winner, setWinner] = useState<Entity | null>(null);
 
@@ -64,7 +64,9 @@ export const BattleMode: FC = () => {
 
   const gameStart = () => {
     //TODO: reset all entities abilities, attributes, statuses and resources
-
+    player.passiveAbilities.forEach(ability => {
+      ability.passive?.applied(player, player);
+    });
     //TODO: apply abilities
     setBattleOngoing(true);
   };
@@ -75,10 +77,12 @@ export const BattleMode: FC = () => {
       <h3>{time.toFixed()}</h3>
       <div>
         <span>
-          <ProgressBar maxHp={player.maxHealth} hp={player.health} />
+          <ProgressBar color={'#e73d12'} maxHp={player.maxHealth} hp={player.health} />
+          <ProgressBar color={'#4045dc'} maxHp={player.maxEnergy} hp={player.energy} />
         </span>
         <span style={{ float: 'right' }}>
-          <ProgressBar maxHp={enemy.maxHealth} hp={enemy.health} />
+          <ProgressBar color={'#e73d12'} maxHp={enemy.maxHealth} hp={enemy.health} />
+          <ProgressBar color={'#4045dc'} maxHp={enemy.maxEnergy} hp={enemy.energy} />
         </span>
         <span>
           <img
@@ -95,6 +99,20 @@ export const BattleMode: FC = () => {
             src="https://cdn.dribbble.com/users/3312991/screenshots/6152604/warrior-idle.gif"
             alt=""
           />
+        </span>
+        <span>
+          {player.attributes.map(attribute => (
+            <div>
+              {attribute.name}: {attribute.Value}
+            </div>
+          ))}
+        </span>
+        <span>
+          {enemy.attributes.map(attribute => (
+            <div>
+              {attribute.name}: {attribute.Value}
+            </div>
+          ))}
         </span>
       </div>
       <h4>Your current Heart Deck:</h4>

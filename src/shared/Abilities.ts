@@ -1,73 +1,59 @@
 import { Ability, Activatable, Appliable, CardType, Rarity } from 'components/BattleMode/Ability';
 import { Attribute } from 'components/BattleMode/Attribute';
 import { Entity } from 'components/BattleMode/Entity';
+import { debug } from 'console';
 
-/*const fireResistance: Ability = new Ability(
-  1,
-  'Fire Resistance',
-  [CardType.Passive],
-  'Gain 10 Fire Resistance.',
-  2,
-  Rarity.Common,
-  (parent: Entity) => {
-    parent.addAttribute(new Attribute('Fire Resistance', 10));
-  }
-);
+const createAttribute = (name: string, baseValue: number) => {
+  return new Appliable((parent: Entity) => {
+    parent.addAttribute(name, baseValue);
+  });
+};
 
-const darkDamage: Ability = new Ability(
-  2,
-  'Dark Damage',
-  [CardType.Passive],
-  'Gain 10 Dark Damage.',
-  2,
-  Rarity.Uncommon,
-  (parent: Entity) => {
-    parent.addAttribute(new Attribute('Dark Damage', 10));
-  }
-);
-const versatileOffense: Ability = new Ability(
-  3,
-  'Versatile Offense',
-  [CardType.Passive],
-  'Gain exponentional Fire Damage based on the number of different damage type attributes you have.',
-  8,
-  Rarity.Rare,
-  (parent: Entity) => {
-    const damageAttributeCount = parent.attributes.filter(a => a.name.toLowerCase().includes('damage')).length;
-    console.log('Damage Attributes Count: ' + damageAttributeCount);
-    parent.addAttribute(new Attribute('Fire Damage', Math.pow(damageAttributeCount, 2)));
-  }
-);
+const createTryHit = (damage: number) => {
+  return (parent: Entity, target: Entity) => target.tryHit(damage);
+};
+const createTryHitWithAttribute = (multiplier: number, attributeName: string) => {
+  return (parent: Entity, target: Entity) => target.tryHit(parent.getAttribute(attributeName) * multiplier);
+};
+const kickActive = new Activatable(1, 10, createTryHitWithAttribute(0.5, 'Physical'));
 
-const darkKnight: Ability = new Ability(
-  4,
-  'Dark Knight',
-  [CardType.Active],
-  'At the start of the game summon a Dark Knight',
-  5,
-  Rarity.Legendary,
-  (parent: Entity) => {}
-);*/
-const punchAttribute = new Appliable((parent: Entity) => {
-  parent.addAttribute(new Attribute('Punch', 5));
+const frontKick = new Ability({
+  id: 1,
+  name: 'Front Kick',
+  types: [CardType.Active, CardType.Passive],
+  description: 'Deal physical damage every 2 seconds.',
+  energyCost: 2,
+  rarity: Rarity.Common,
+  passive: createAttribute('Physical', 10),
+  active: kickActive,
+  trigger: null
 });
-const punchPassive: Ability = new Ability(
-  1,
-  'Punch',
-  [CardType.Passive],
-  'Gain 5 Punch damage.',
-  2,
-  Rarity.Common,
-  punchAttribute,
-  null,
-  null
-);
-const punchActive: Activatable = new Activatable(
-  1,
-  (parent: Entity, target: Entity) => {
-    target.takeDamage(10 + parent.getAttribute('Punch') + parent.getAttribute('Physical'));
-  },
-  false
-);
-const punch = new Ability(5, 'Punch', [CardType.Active], 'Punch', 4, Rarity.Common, null, punchActive, null);
-export const allAbilities = [punch, punchPassive];
+
+const telepathyActive = new Activatable(2, 17, createTryHitWithAttribute(2, 'Mental'));
+
+interface ActiveProps {
+  activationTime: number;
+  energyCost: number;
+  activated: (parent: Entity, target: Entity) => void;
+}
+
+//const createActive = (multiplier: number) => {
+
+const telepathy = new Ability({
+  id: 2,
+  name: 'Telepathy',
+  types: [CardType.Active, CardType.Passive],
+  description: 'Deal Mental damage 10 times every 2 seconds.',
+  energyCost: 2,
+  rarity: Rarity.Rare,
+  passive: createAttribute('Mental', 17),
+  active: telepathyActive,
+  trigger: null
+});
+
+export const allAbilities = [frontKick, telepathy];
+
+function mostCommon(arr: string[]) {
+  return arr.sort((a, b) => arr.filter(v => v === a).length - arr.filter(v => v === b).length).pop();
+}
+console.log(mostCommon(['asdasd', 'b', 'c', 'd', 'e', 'f', 'g', 'asdasd']));
